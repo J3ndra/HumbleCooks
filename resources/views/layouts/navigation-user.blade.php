@@ -5,7 +5,7 @@
             <img src="{{ asset('/css/logo.png') }}" alt="Logo" width="300" height="253">
         </a>
         <div class="mb-4 flex justify-end">
-            <form action="{{ route('search') }}" method="GET" class="flex">
+            <form action="{{ route('home') }}" method="GET" class="flex">
                 <input type="text" name="search" value="{{ $search ?? '' }}"
                     class="flex-1 px-2 py-1 border border-black-300 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
                     placeholder="Search ingredient...">

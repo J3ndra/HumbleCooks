@@ -7,6 +7,7 @@ use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class IngredientController extends Controller
 {
     public function index(Request $request)
@@ -118,14 +119,5 @@ class IngredientController extends Controller
         return redirect()
             ->route('dashboard.ingredient.index')
             ->with('status', 'Ingredient deleted successfully.');
-    }
-    public function Search(Request $request){
-        $item = $request->search;
-        $ingr = Ingredient::where('name','LIKE',"%$item%")->get();
-        foreach ($ingr as $ingredient) {
-            $ingredient->image = asset($ingredient->image); // Ubah properti 'image' menjadi URL gambar yang benar
-        }
-
-        return view('search', compact('ingr'));
     }
 }
