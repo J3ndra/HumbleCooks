@@ -10,6 +10,8 @@ class StepImage extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['image'];
+
     public function step(): BelongsTo
     {
         return $this->belongsTo(Step::class);

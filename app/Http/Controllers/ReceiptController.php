@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ReceiptController extends Controller
 {
@@ -134,5 +135,130 @@ class ReceiptController extends Controller
         return redirect()
             ->route('dashboard.receipt.index')
             ->with('status', 'Receipt created successfully.');
+    }
+
+    public function edit($id)
+    {
+        $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
+        $categories = Category::all();
+        $ingredients = Ingredient::all();
+        $tools = Tool::all();
+
+        return view('admin.receipt.form', [
+            'receipt' => $receipt,
+            'categories' => $categories,
+            'ingredients' => $ingredients,
+            'tools' => $tools,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'description' => 'required|string',
+            'cal_total' => 'required|numeric',
+            'est_price' => 'required|numeric',
+            'categories' => 'array',
+            'ingredients' => 'array',
+            'tools' => 'array',
+            'steps.*.title' => 'required|string',
+            'steps.*.description' => 'required|string',
+            'steps.*.images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
+
+        // Get the authenticated user's ID
+        $userId = Auth::id();
+
+        // Update main receipt details
+        $receipt->user_id = $userId;
+        $receipt->title = $validatedData['name'];
+        $receipt->description = $validatedData['description'];
+        $receipt->cal_total = $validatedData['cal_total'];
+        $receipt->est_price = $validatedData['est_price'];
+
+        // Update thumbnail if provided
+        if ($request->hasFile('thumbnail')) {
+            $thumbnail = $request->file('thumbnail');
+            $thumbnailPath = $thumbnail->store('thumbnails', 'receipts');
+            $receipt->thumbnail_image = $thumbnailPath;
+        }
+
+        // Update relationships (categories, ingredients, tools) if necessary
+        if (isset($validatedData['categories'])) {
+            $receipt->categories()->syncWithoutDetaching($validatedData['categories']);
+        }
+
+        if (isset($validatedData['ingredients'])) {
+            $receipt->ingredients()->syncWithoutDetaching($validatedData['ingredients']);
+        }
+
+        if (isset($validatedData['tools'])) {
+            $receipt->tools()->syncWithoutDetaching($validatedData['tools']);
+        }
+
+        // Update steps and their images
+        foreach ($validatedData['steps'] as $stepIndex => $stepData) {
+            $step = $receipt->steps->find($stepIndex);
+            if ($step) {
+                $step->title = $stepData['title'];
+                $step->description = $stepData['description'];
+                $step->save();
+
+                // Update step images if provided
+                if (isset($stepData['images'])) {
+                    $stepImages = [];
+                    foreach ($stepData['images'] as $image) {
+                        $imagePath = $image->store('steps', 'receipts');
+                        $stepImages[] = ['image' => $imagePath];
+                    }
+                    $step->stepImages()->createMany($stepImages);
+                }
+            }
+        }
+
+        $receipt->save();
+
+        return redirect()
+            ->route('dashboard.receipt.index')
+            ->with('status', 'Receipt updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        // Find the receipt by ID
+        $receipt = Receipt::findOrFail($id);
+
+        // Delete the associated step images
+        foreach ($receipt->steps as $step) {
+            foreach ($step->stepImages as $stepImage) {
+                Storage::disk('public')->delete($stepImage->image);
+                $stepImage->delete();
+            }
+        }
+
+        // Delete the steps
+        $receipt->steps()->delete();
+
+        // Delete the thumbnail image if it exists
+        if ($receipt->thumbnail_image) {
+            Storage::disk('public')->delete($receipt->thumbnail_image);
+        }
+
+        // Detach the categories, ingredients, and tools
+        $receipt->categories()->detach();
+        $receipt->ingredients()->detach();
+        $receipt->tools()->detach();
+
+        // Delete the receipt
+        $receipt->delete();
+
+        // Return a response or redirect to a success page
+        return redirect()
+            ->route('dashboard.receipt.index')
+            ->with('status', 'Receipt deleted successfully.');
     }
 }

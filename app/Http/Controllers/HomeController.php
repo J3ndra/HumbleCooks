@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ingredient;
+use App\Models\Receipt;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -14,16 +15,16 @@ class HomeController extends Controller
         // $ingr = Ingredient::where('name','LIKE',"%$item%")->get();
         $search = $request->input('search');
 
-        $query = Ingredient::query();
+        $query = Receipt::query();
 
         if ($search) {
-            $query->where('ingredients.name', 'like', '%' . $search . '%');
+            $query->where('receipts.title', 'like', '%' . $search . '%');
         }
 
-        $ingredients = $query->paginate(5);
+        $receipts = $query->paginate(5);
 
         return view('home', [
-            'ingredients' => $ingredients
+            'receipts' => $receipts
         ]);
     }
 }
