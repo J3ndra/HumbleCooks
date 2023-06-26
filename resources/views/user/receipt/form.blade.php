@@ -18,14 +18,17 @@
                     @method(isset($receipt) ? 'PUT' : 'POST')
 
                     <div class="mb-4">
-                        <label for="name" class="block text-base font-medium text-gray-700">Name</label>
+                        <label for="name"
+                            class="block text-base font-medium text-gray-700 ">Name</label>
                         <input type="text" name="name" id="name"
                             value="{{ isset($receipt) ? $receipt->title : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="thumbnail" class="block text-base font-medium text-gray-700">Thumbnail</label>
+                        <label for="thumbnail"
+                            class="block text-base font-medium text-gray-700 ">Thumbnail</label>
                         <input type="file" name="thumbnail" id="thumbnail" onchange="previewThumbnail(event)"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                             {{ isset($receipt) ? '' : 'required' }}>
@@ -35,27 +38,34 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="description" class="block text-base font-medium text-gray-700">Description</label>
+                        <label for="description"
+                            class="block text-base font-medium text-gray-700 ">Description</label>
                         <textarea name="description" id="description" rows="4"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ isset($receipt) ? $receipt->description : '' }}</textarea>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            required>{{ isset($receipt) ? $receipt->description : '' }}</textarea>
                     </div>
 
                     <div class="mb-4">
-                        <label for="cal_total" class="block text-base font-medium text-gray-700">Calories</label>
+                        <label for="cal_total"
+                            class="block text-base font-medium text-gray-700 ">Calories</label>
                         <input type="text" name="cal_total" id="cal_total"
                             value="{{ isset($receipt) ? $receipt->cal_total : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="est_price" class="block text-base font-medium text-gray-700">Estimated Price</label>
+                        <label for="est_price"
+                            class="block text-base font-medium text-gray-700 ">Estimated Price</label>
                         <input type="text" name="est_price" id="est_price"
                             value="{{ isset($receipt) ? $receipt->est_price : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="categories" class="block text-base font-medium text-gray-700">Categories</label>
+                        <label for="categories"
+                            class="block text-base font-medium text-gray-700 ">Categories</label>
                         <select name="categories[]" id="categories" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($categories as $category)
@@ -65,7 +75,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="ingredients" class="block text-base font-medium text-gray-700">Ingredients</label>
+                        <label for="ingredients"
+                            class="block text-base font-medium text-gray-700 ">Ingredients</label>
                         <select name="ingredients[]" id="ingredients" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($ingredients as $ingredient)
@@ -75,7 +86,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="tools" class="block text-base font-medium text-gray-700">Tools</label>
+                        <label for="tools"
+                            class="block text-base font-medium text-gray-700 ">Tools</label>
                         <select name="tools[]" id="tools" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($tools as $tool)
@@ -88,19 +100,20 @@
                         @if (isset($receipt) && $receipt->steps->count() > 0)
                             @foreach ($receipt->steps as $step)
                                 <div class="mb-4 step">
-                                    <label class="block text-base font-medium text-gray-700">Step
+                                    <label class="block text-base font-medium text-gray-700 ">Step
                                         {{ $loop->iteration }}</label>
                                     <div class="flex items-center mb-2">
                                         <input type="text" name="steps[{{ $step->id }}][title]"
                                             value="{{ $step->title }}"
-                                            class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
-                                            required>
+                                            class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm"
+                                            placeholder="Title" required>
                                         <button type="button" class="remove-step text-red-500 focus:outline-none">
                                             Remove
                                         </button>
                                     </div>
                                     <textarea name="steps[{{ $step->id }}][description]" rows="2"
-                                        class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Description">{{ $step->description }}</textarea>
+                                        class="w-full rounded-md border-gray-300 shadow-sm"
+                                        placeholder="Description">{{ $step->description }}</textarea>
                                     <div class="mt-2">
                                         <input type="file" name="steps[{{ $step->id }}][images][]" multiple
                                             class="image-input" accept="image/*">
@@ -112,7 +125,6 @@
                                                     class="w-20 h-20 object-cover rounded-md">
                                             </div>
                                         @endforeach
-
                                     </div>
                                     <div class="mt-2">
                                         <input type="file" name="steps[1][images][]" multiple class="image-input"
@@ -124,17 +136,18 @@
                             @endforeach
                         @else
                             <div class="mb-4 step">
-                                <label class="block text-base font-medium text-gray-700">Step
+                                <label class="block text-base font-medium text-gray-700 ">Step
                                     1</label>
                                 <div class="flex items-center mb-2">
                                     <input type="text" name="steps[1][title]"
-                                        class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
-                                        required>
+                                        class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm"
+                                        placeholder="Title" required>
                                     <button type="button" class="remove-step text-red-500 focus:outline-none">
                                         Remove
                                     </button>
                                 </div>
-                                <textarea name="steps[1][description]" rows="2" class="w-full rounded-md border-gray-300 shadow-sm"
+                                <textarea name="steps[1][description]" rows="2"
+                                    class="w-full rounded-md border-gray-300 shadow-sm"
                                     placeholder="Description"></textarea>
                                 <div class="mt-2">
                                     <input type="file" name="steps[1][images][]" multiple class="image-input"
@@ -149,7 +162,6 @@
                         class="mt-4 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-white font-medium rounded-md">
                         Add Step
                     </button>
-
 
                     <div>
                         <button type="submit"
@@ -178,6 +190,26 @@
             } else {
                 thumbnailPreview.src = '';
             }
+        }
+
+        function attachImageInputListeners(stepIndex) {
+            const imageInputs = document.querySelectorAll('.image-input');
+            imageInputs.forEach((input, index) => {
+                input.addEventListener('change', () => {
+                    const stepDiv = input.closest('.step');
+                    const previewDiv = stepDiv.querySelector(`#step-images-preview-${stepIndex}`);
+                    previewDiv.innerHTML = '';
+
+                    Array.from(input.files).forEach(file => {
+                        const imagePreview = document.createElement('img');
+                        imagePreview.src = URL.createObjectURL(file);
+                        imagePreview.alt = 'Step Image';
+                        imagePreview.classList.add('w-20', 'h-20', 'object-cover',
+                            'rounded-md');
+                        previewDiv.appendChild(imagePreview);
+                    });
+                });
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -237,9 +269,7 @@
 
                 removeStepButton.addEventListener('click', () => {
                     stepDiv.remove();
-                    stepIndex--;
                 });
-
 
                 const imageInput = stepDiv.querySelector('.image-input');
                 imageInput.addEventListener('change', () => {
@@ -258,35 +288,15 @@
                 });
 
                 stepIndex++;
+
                 attachImageInputListeners(stepIndex);
             });
-
-            function attachImageInputListeners(stepIndex) {
-                const imageInputs = document.querySelectorAll('.image-input');
-                imageInputs.forEach(input => {
-                    input.addEventListener('change', () => {
-                        const stepDiv = input.closest('.step');
-                        const previewDiv = stepDiv.querySelector(
-                            `#step-images-preview-${stepIndex}`);
-                        previewDiv.innerHTML = '';
-
-                        Array.from(input.files).forEach(file => {
-                            const imagePreview = document.createElement('img');
-                            imagePreview.src = URL.createObjectURL(file);
-                            imagePreview.alt = 'Step Image';
-                            imagePreview.classList.add('w-20', 'h-20', 'object-cover',
-                                'rounded-md');
-                            previewDiv.appendChild(imagePreview);
-                        });
-                    });
-                });
-            }
 
             const imageInputs = document.querySelectorAll('.image-input');
             imageInputs.forEach(input => {
                 input.addEventListener('change', () => {
                     const stepDiv = input.closest('.step');
-                    const previewDiv = stepDiv.querySelector(`#step-images-preview-${stepIndex}`);
+                    const previewDiv = stepDiv.querySelector(`#step-images-preview`);
                     previewDiv.innerHTML = '';
 
                     Array.from(input.files).forEach(file => {
@@ -300,7 +310,7 @@
                 });
             });
 
-            attachImageInputListeners(stepIndex);
+            attachImageInputListeners();
         });
     </script>
 </x-app-user-layout>
