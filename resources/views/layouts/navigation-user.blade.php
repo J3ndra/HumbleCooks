@@ -19,7 +19,7 @@
 
 
         <div class="flex items-center space-x-4">
-            <a href="#" class="text-center text-gray-700 hover:text-primary transition relative">
+            <a href="{{ route('create_receipt_view') }}" class="text-center text-gray-700 hover:text-primary transition relative">
                 <div class="text-2xl">
                     <i class="fa fa-plus-square-o"></i>
                 </div>

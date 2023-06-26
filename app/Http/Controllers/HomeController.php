@@ -27,4 +27,9 @@ class HomeController extends Controller
             'receipts' => $receipts
         ]);
     }
+
+    public function create_receipt_view(): View
+    {
+        return view('user.receipt.form');
+    }
 }

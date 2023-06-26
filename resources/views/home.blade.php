@@ -123,7 +123,7 @@
                     </div>
                 </div>
             @empty
-                <h2>Tidak ada hasil pencarian</h2>
+                <h2>Tidak ada data resep!</h2>
             @endforelse
         </div>
     </div>
