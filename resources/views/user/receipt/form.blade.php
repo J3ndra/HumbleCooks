@@ -269,6 +269,7 @@
 
                 removeStepButton.addEventListener('click', () => {
                     stepDiv.remove();
+                    stepIndex--;
                 });
 
                 const imageInput = stepDiv.querySelector('.image-input');

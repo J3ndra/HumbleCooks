@@ -1,7 +1,7 @@
 <!-- header -->
 <header class="py-4 shadow-sm bg-white">
     <div class="container flex items-center justify-between">
-        <a href="{{ route('home') }}" class="ml-48">
+        <a href="{{ route('home') }}" class="ml-72">
             <img src="{{ asset('/css/logo.png') }}" alt="Logo" width="300" height="253">
         </a>
         <div class="mb-4 flex justify-end">
@@ -89,6 +89,7 @@
                                 <i class="fas fa-address-book"></i>
                             </div>
                             <div class="text-xs leading-3">Register</div>
+                        </a>
                     @endif
                 @endauth
             @endif

@@ -36,6 +36,13 @@ class HomeController extends Controller
         ]);
     }
 
+    public function receipt_detail($id): View
+    {
+        $receipt = Receipt::findOrFail($id);
+
+        return view('user.receipt.detail', compact('receipt'));
+    }
+
     public function my_receipt(): View
     {
         $receipts = Receipt::where('user_id', Auth::id())->paginate(5);

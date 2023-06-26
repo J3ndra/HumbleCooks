@@ -18,7 +18,7 @@
         @method('patch')
 
         <div>
-            <x-input-label for="avatar" :value="__('Avatar')" />
+            <x-input-label-user for="avatar" :value="__('Avatar')" />
             <input id="avatar" name="avatar" type="file" accept="image/*" class="mt-1 block w-full" />
             <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
         </div>
@@ -35,15 +35,15 @@
         <!-- End Preview Avatar -->
 
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
+            <x-input-label-user for="name" :value="__('Name')" />
+            <x-text-input-user id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)"
                 required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)"
+            <x-input-label-user for="email" :value="__('Email')" />
+            <x-text-input-user id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)"
                 required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 

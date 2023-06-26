@@ -1,15 +1,11 @@
 <x-app-user-layout>
-    <!-- banner -->
-    <div class="bg-cover bg-no-repeat bg-center py-36"
-        style="background-image: url('{{ asset('/rumah/images/cook1.jpg') }}');">
-        <div class="container">
-            <h1 class="text-6xl text-white font-medium mb-4 capitalize">
-                Detail Resep
-            </h1>
-            <p class="text-white"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
-                accusantium perspiciatis, sapiente
-                magni eos dolorum ex quos dolores odio</p>
-
+    <div class="ml-48 mr-48 mt-16">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            {{-- Make thumbnail image cover div --}}
+            <div class="h-96 bg-cover bg-center" style="background-image: url('{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}')"></div>
+            <div class="m-4">
+                <h1>{{ $receipt->title }}</h1>
+            </div>
         </div>
     </div>
 </x-app-user-layout>
