@@ -32,52 +32,13 @@
 
 
     <!-- header -->
-    <header class="py-4 shadow-sm bg-white">
-        <div class="container flex items-center justify-between">
-            <a href="{{ route('home') }}">
-                <img src="{{ asset('/css/logo.png')}}" alt="Logo" width="300" height="253">
-            </a>
-            <div class="mb-4 flex justify-end">
-                <form action="{{ route('search') }}" method="GET" class="flex">
-                    <input type="text" name="search" value="{{ $search ?? '' }}"
-                        class="flex-1 px-2 py-1 border border-gray-300 dark:border-gray-700 dark:bg-gray-900 focus:outline-none dark:text-white"
-                        placeholder="Search ingredient...">
-                    <button type="submit"
-                        class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-medium rounded">
-                        Search
-                    </button>
-                </form>
-            </div>
-            {{-- <div class="w-full max-w-xl relative flex">
-                <span class="absolute left-4 top-3 text-lg text-gray-400">
-                    <i class="fa fa-search" ></i>
-                </span><form action="{{ route('search')}}" method="GET">
-                    @csrf
-                    @method('GET')
-                <input type="text" name="search" id="search" class="w-full border border-primary border-r-0 pl-12 py-3 pr-3 rounded-l-md focus:outline-none hidden md:flex"
-                    placeholder="search">
-                    <button type="submit" class="bg-primary border border-primary text-white px-8 rounded-r-md hover:bg-transparent hover:text-primary transition hidden md:flex"
-                            style="display: flex; justify-content: center; font-size: 30px;" name="search" id="search">cari
-                    </button>
-                </form>
-            </div> --}}
-
-            <div class="flex items-center space-x-4">
-                <a href="#" class="text-center text-gray-700 hover:text-primary transition relative">
-                    <div class="text-2xl">
-                        <i class="fa fa-plus-square-o"></i>
+    @if (isset($header))
+                <header class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
                     </div>
-                    <div class="text-xs leading-3">Tambah resep</div>
-                </a>
-                <a href="{{ route('profile.edit') }}" class="text-center text-gray-700 hover:text-primary transition relative">
-                    <div class="text-2xl">
-                        <i class="fa-regular fa-user"></i>
-                    </div>
-                    <div class="text-xs leading-3">Akun</div>
-                </a>
-            </div>
-        </div>
-    </header>
+                </header>
+            @endif
     <!-- ./header -->
 
     <!-- navbar -->
