@@ -29,7 +29,13 @@
                             @error('thumbnail')
                                 <p class="text-red-500 mt-1">{{ $message }}</p>
                             @enderror
+
+                            <!-- Preview thumbnail -->
+                            <div id="thumbnail-preview" class="mt-2">
+                                <!-- Placeholder for thumbnail preview -->
+                            </div>
                         </div>
+
 
                         <div class="mb-4">
                             <label for="description" class="block font-medium text-gray-700">Description</label>
@@ -63,36 +69,48 @@
                         <div class="mb-4">
                             <label class="block font-medium text-gray-700">Steps</label>
                             <div id="steps-container">
-                                <div class="mt-2">
+                                <div class="mt-2" id="step-0">
                                     <input type="text" name="steps[0][title]"
-                                        class="form-input rounded-md shadow-sm block w-full" placeholder="Title"
+                                        class="form-input rounded-md shadow-sm block w-full mb-2" placeholder="Title"
                                         required />
                                     @error('steps.0.title')
                                         <p class="text-red-500 mt-1">{{ $message }}</p>
-                                        <!-- Add the "Remove Step" button -->
-                                        <button type="button"
-                                            class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                                            onclick="removeStep(0)">Remove Step</button>
                                     @enderror
-                                </div>
-                                <div class="mt-2">
-                                    <textarea name="steps[0][description]" class="form-textarea rounded-md shadow-sm block w-full" placeholder="Description"
-                                        required></textarea>
+
+                                    <textarea name="steps[0][description]" class="form-textarea rounded-md shadow-sm block w-full mt-2"
+                                        placeholder="Description" required></textarea>
                                     @error('steps.0.description')
                                         <p class="text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
-                                </div>
-                                <div class="mt-2">
+
                                     <input type="file" name="steps[0][images][]" multiple
-                                        class="form-input rounded-md shadow-sm block w-full" accept="image/*" />
+                                        class="form-input rounded-md shadow-sm block w-full mt-2" accept="image/*" />
                                     @error('steps.0.images.*')
                                         <p class="text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
+
+                                    <!-- Preview thumbnail and images -->
+                                    <div id="step-images-preview-0" class="flex mt-2">
+                                        <!-- Preview thumbnail image -->
+                                        <div id="step-thumbnail-preview-0" class="w-20 h-20 mr-2">
+                                            <!-- Placeholder for thumbnail preview -->
+                                        </div>
+
+                                        <!-- Preview images -->
+                                        <div id="step-images-preview-container-0" class="flex">
+                                            <!-- Placeholder for image previews -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Add the "Remove Step" button -->
+                                    <button type="button"
+                                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 mt-2"
+                                        onclick="removeStep(0)">Remove Step</button>
                                 </div>
                             </div>
                             <div class="mt-2">
                                 <button type="button" id="add-step-btn"
-                                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-700">
+                                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-sky-500 hover:bg-sky-700 hover:text-white">
                                     Add Step
                                 </button>
                             </div>
@@ -184,13 +202,14 @@
             const titleInput = document.createElement('input');
             titleInput.setAttribute('type', 'text');
             titleInput.setAttribute('name', `steps[${stepIndex}][title]`);
-            titleInput.classList.add('form-input', 'rounded-md', 'shadow-sm', 'block', 'w-full');
+            titleInput.classList.add('form-input', 'rounded-md', 'shadow-sm', 'block', 'w-full', 'mb-2');
             titleInput.setAttribute('placeholder', 'Title');
             titleInput.required = true;
 
             const descriptionTextarea = document.createElement('textarea');
             descriptionTextarea.setAttribute('name', `steps[${stepIndex}][description]`);
-            descriptionTextarea.classList.add('form-textarea', 'rounded-md', 'shadow-sm', 'block', 'w-full');
+            descriptionTextarea.classList.add('form-textarea', 'rounded-md', 'shadow-sm', 'block', 'w-full',
+                'mb-2');
             descriptionTextarea.setAttribute('placeholder', 'Description');
             descriptionTextarea.required = true;
 
@@ -200,11 +219,34 @@
             imagesInput.setAttribute('multiple', 'multiple');
             imagesInput.classList.add('form-input', 'rounded-md', 'shadow-sm', 'block', 'w-full');
             imagesInput.setAttribute('accept', 'image/*');
+            imagesInput.addEventListener('change', function(event) {
+                // Remove previous image previews
+                const previewContainer = document.getElementById(
+                    `step-images-preview-container-${stepIndex}`);
+                previewContainer.innerHTML = '';
+
+                const files = event.target.files;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imagePreview = document.createElement('img');
+                        imagePreview.setAttribute('src', e.target.result);
+                        imagePreview.setAttribute('alt', file.name);
+                        imagePreview.classList.add('w-20', 'h-20', 'mr-2');
+
+                        previewContainer.appendChild(imagePreview);
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
 
             const removeStepButton = document.createElement('button');
             removeStepButton.setAttribute('type', 'button');
             removeStepButton.classList.add('px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
-                'rounded-md', 'text-white', 'bg-red-600', 'hover:bg-red-700');
+                'rounded-md', 'text-white', 'bg-red-600', 'hover:bg-red-700', 'mt-2');
             removeStepButton.textContent = 'Remove Step';
             removeStepButton.addEventListener('click', function() {
                 removeStep(stepIndex);
@@ -216,6 +258,27 @@
             stepDiv.appendChild(removeStepButton);
 
             container.appendChild(stepDiv);
+        });
+
+        // Preview thumbnail image
+        document.getElementById('thumbnail').addEventListener('change', function(event) {
+            const thumbnailPreview = document.getElementById('thumbnail-preview');
+            thumbnailPreview.innerHTML = '';
+
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imagePreview = document.createElement('img');
+                    imagePreview.setAttribute('src', e.target.result);
+                    imagePreview.setAttribute('alt', file.name);
+                    imagePreview.classList.add('max-w-xs', 'mr-2');
+
+                    thumbnailPreview.appendChild(imagePreview);
+                };
+
+                reader.readAsDataURL(file);
+            }
         });
     </script>
 
