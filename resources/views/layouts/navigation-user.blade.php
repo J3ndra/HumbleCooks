@@ -46,6 +46,12 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <!-- If admin, add another dropdown link to go to dashboard -->
+                            @if (Auth::user()->role->id == '1')
+                                <x-dropdown-link :href="route('dashboard.dashboard')">
+                                    {{ __('Dashboard') }}
+                                </x-dropdown-link>
+                            @endif
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
