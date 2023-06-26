@@ -97,7 +97,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/create-receipt', [HomeController::class, 'create_receipt_view'])->name('create_receipt_view');
-    Route::post('/create-receipt', [HomeController::class, 'create_receipt_view'])->name('create_receipt_view');
+    Route::post('/create-receipt', [HomeController::class, 'store_receipt'])->name('store_receipt');
     Route::get('/receipt/${id}', [HomeController::class, 'receipt_detail'])->name('receipt_detail');
 });
 
