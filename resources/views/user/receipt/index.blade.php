@@ -16,7 +16,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @if ($receipts->isEmpty())
-                        <p>No receipt founds</p>
+                        <p>Sepertinya kamu belum membuat resep apapun 😔</p>
                     @else
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="">
@@ -66,11 +66,11 @@
                                                 </button>
                                             </a>
                                             <br>
-                                            <button
-                                                onclick="window.location.href = '{{ route('dashboard.receipt.edit', $receipt->id) }}'"
-                                                class="text-yellow-600 hover:underline focus:outline-none">
-                                                Edit
-                                            </button>
+                                            <a href="{{ route('edit_receipt', $receipt->id) }}">
+                                                <button class="text-yellow-600 hover:underline focus:outline-none">
+                                                    Edit
+                                                </button>
+                                            </a>
                                             <br>
                                             <button onclick="showDeleteConfirmation({{ $receipt->id }})"
                                                 class="text-red-600 hover:underline focus:outline-none">
@@ -121,7 +121,7 @@
                 <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-gray-900 font-medium rounded"
                     onclick="hideDeleteConfirmation()">Cancel</button>
                 @isset($receipt)
-                    <form id="deleteForm" method="POST" action="{{ route('dashboard.receipt.destroy', $receipt->id) }}"
+                    <form id="deleteForm" method="POST" action="{{ route('delete_receipt', $receipt->id) }}"
                         class="ml-4">
                         @csrf
                         @method('DELETE')
@@ -137,7 +137,7 @@
         function showDeleteConfirmation(receiptId) {
             const deleteModal = document.getElementById('deleteModal');
             deleteModal.classList.remove('hidden');
-            deleteModal.querySelector('#deleteForm').action = '/dashboard/receipt/destroy/' + receiptId;
+            deleteModal.querySelector('#deleteForm').action = '/receipt/' + receiptId;
         }
 
         function hideDeleteConfirmation() {

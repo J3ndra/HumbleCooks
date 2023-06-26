@@ -10,25 +10,23 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <form
-                    action="{{ isset($receipt) ? route('store_receipt', $receipt->id) : route('store_receipt') }}"
+                <form action="{{ isset($receipt) ? route('update_receipt', $receipt->id) : route('store_receipt') }}"
                     method="POST" enctype="multipart/form-data" class="p-6">
                     @csrf
 
-                    @method(isset($receipt) ? 'PUT' : 'POST')
+                    @if (isset($receipt))
+                        @method('PUT')
+                    @endif
 
                     <div class="mb-4">
-                        <label for="name"
-                            class="block text-base font-medium text-gray-700 ">Name</label>
+                        <label for="name" class="block text-base font-medium text-gray-700 ">Name</label>
                         <input type="text" name="name" id="name"
                             value="{{ isset($receipt) ? $receipt->title : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                            required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="thumbnail"
-                            class="block text-base font-medium text-gray-700 ">Thumbnail</label>
+                        <label for="thumbnail" class="block text-base font-medium text-gray-700 ">Thumbnail</label>
                         <input type="file" name="thumbnail" id="thumbnail" onchange="previewThumbnail(event)"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                             {{ isset($receipt) ? '' : 'required' }}>
@@ -38,34 +36,28 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="description"
-                            class="block text-base font-medium text-gray-700 ">Description</label>
+                        <label for="description" class="block text-base font-medium text-gray-700 ">Description</label>
                         <textarea name="description" id="description" rows="4"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                            required>{{ isset($receipt) ? $receipt->description : '' }}</textarea>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ isset($receipt) ? $receipt->description : '' }}</textarea>
                     </div>
 
                     <div class="mb-4">
-                        <label for="cal_total"
-                            class="block text-base font-medium text-gray-700 ">Calories</label>
+                        <label for="cal_total" class="block text-base font-medium text-gray-700 ">Calories</label>
                         <input type="text" name="cal_total" id="cal_total"
                             value="{{ isset($receipt) ? $receipt->cal_total : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                            required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="est_price"
-                            class="block text-base font-medium text-gray-700 ">Estimated Price</label>
+                        <label for="est_price" class="block text-base font-medium text-gray-700 ">Estimated
+                            Price</label>
                         <input type="text" name="est_price" id="est_price"
                             value="{{ isset($receipt) ? $receipt->est_price : '' }}"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                            required>
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                     </div>
 
                     <div class="mb-4">
-                        <label for="categories"
-                            class="block text-base font-medium text-gray-700 ">Categories</label>
+                        <label for="categories" class="block text-base font-medium text-gray-700 ">Categories</label>
                         <select name="categories[]" id="categories" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($categories as $category)
@@ -75,8 +67,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="ingredients"
-                            class="block text-base font-medium text-gray-700 ">Ingredients</label>
+                        <label for="ingredients" class="block text-base font-medium text-gray-700 ">Ingredients</label>
                         <select name="ingredients[]" id="ingredients" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($ingredients as $ingredient)
@@ -86,8 +77,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="tools"
-                            class="block text-base font-medium text-gray-700 ">Tools</label>
+                        <label for="tools" class="block text-base font-medium text-gray-700 ">Tools</label>
                         <select name="tools[]" id="tools" multiple
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                             @foreach ($tools as $tool)
@@ -105,15 +95,14 @@
                                     <div class="flex items-center mb-2">
                                         <input type="text" name="steps[{{ $step->id }}][title]"
                                             value="{{ $step->title }}"
-                                            class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm"
-                                            placeholder="Title" required>
+                                            class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
+                                            required>
                                         <button type="button" class="remove-step text-red-500 focus:outline-none">
                                             Remove
                                         </button>
                                     </div>
                                     <textarea name="steps[{{ $step->id }}][description]" rows="2"
-                                        class="w-full rounded-md border-gray-300 shadow-sm"
-                                        placeholder="Description">{{ $step->description }}</textarea>
+                                        class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Description">{{ $step->description }}</textarea>
                                     <div class="mt-2">
                                         <input type="file" name="steps[{{ $step->id }}][images][]" multiple
                                             class="image-input" accept="image/*">
@@ -140,14 +129,13 @@
                                     1</label>
                                 <div class="flex items-center mb-2">
                                     <input type="text" name="steps[1][title]"
-                                        class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm"
-                                        placeholder="Title" required>
+                                        class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
+                                        required>
                                     <button type="button" class="remove-step text-red-500 focus:outline-none">
                                         Remove
                                     </button>
                                 </div>
-                                <textarea name="steps[1][description]" rows="2"
-                                    class="w-full rounded-md border-gray-300 shadow-sm"
+                                <textarea name="steps[1][description]" rows="2" class="w-full rounded-md border-gray-300 shadow-sm"
                                     placeholder="Description"></textarea>
                                 <div class="mt-2">
                                     <input type="file" name="steps[1][images][]" multiple class="image-input"
