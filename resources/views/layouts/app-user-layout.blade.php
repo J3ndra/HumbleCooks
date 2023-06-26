@@ -55,6 +55,23 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .min-h-screen {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -74,6 +91,8 @@
         <main>
             {{ $slot }}
         </main>
+
+        @include('layouts.footer-user-layout')
     </div>
 </body>
 

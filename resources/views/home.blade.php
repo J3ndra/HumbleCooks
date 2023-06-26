@@ -139,9 +139,4 @@
             @endforelse
         </div>
     </div>
-
-
-    <!-- copyright -->
-    @include('layouts.footer-user-layout')
-    <!-- ./copyright -->
 </x-app-user-layout>
