@@ -10,10 +10,10 @@
     <div class="bg-cover bg-no-repeat bg-center py-36"
         style="background-image: url('{{ asset('/rumah/images/cook1.jpg') }}');">
         <div class="container">
-            <h1 class="text-6xl text-white font-medium mb-4 ml-48 capitalize">
+            <h1 class="text-6xl text-white font-medium mb-4 ml-72 capitalize">
                 The place to find the best <br> dining menu
             </h1>
-            <p class="text-white ml-48"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
+            <p class="text-white ml-72"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
                 accusantium perspiciatis, sapiente
                 magni eos dolorum ex quos dolores odio</p>
 
