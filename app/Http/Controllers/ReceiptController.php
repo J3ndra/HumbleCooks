@@ -38,7 +38,7 @@ class ReceiptController extends Controller
     public function show(Request $request, $id)
     {
         if ($request->ajax()) {
-            $receipt = Receipt::with('categories', 'ingredients', 'equipments', 'steps', 'steps.stepImages')->findOrFail($id);
+            $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
             Log::info($receipt);
             return Response::json($receipt);
         }
@@ -64,9 +64,9 @@ class ReceiptController extends Controller
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'ingredients' => 'nullable|array',
-            'ingredients.*.id' => 'exists:ingredients,id',
+            'ingredients.*' => 'exists:ingredients,id',
             'tools' => 'nullable|array',
-            'tools.*.id' => 'exists:tools,id',
+            'tools.*' => 'exists:tools,id',
         ]);
 
         // Get the selected category IDs

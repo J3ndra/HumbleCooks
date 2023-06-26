@@ -128,19 +128,33 @@
                 <ul class="mb-4 text-white">
                     ${data.categories.map(category => `<li>- ${category.name}</li>`).join('')}
                 </ul>
+                
+                
             </div>
+            <div>
+                <h4 class="font-semibold mb-2 text-white">Ingredients:</h4>
+                <ul class="mb-4 text-white">
+                    ${data.ingredients.map(ingredient => `<li>- ${ingredient.name}</li>`).join('')}
+                </ul>    
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2 text-white">Tools:</h4>
+                <ul class="mb-4 text-white">
+                    ${data.tools.map(tool => `<li>- ${tool.name}</li>`).join('')}
+                </ul>
+                </div>
             <div>
                 <h4 class="font-semibold mb-2 text-white">Steps:</h4>
                 <ol class="text-white">
                     ${data.steps.map(step => `
-                                    <li>
-                                        <h3>${step.title}</h3>
-                                        <p>${step.description}</p>
-                                        ${step.step_images.map(stepImage => `
+                                        <li>
+                                            <h3 class="font-bold">Title : ${step.title}</h3>
+                                            <p>Description : ${step.description}</p>
+                                            ${step.step_images.map(stepImage => `
                                 <img src="{{ Storage::disk('steps')->url('${stepImage.image}') }}" alt="Step Image" class="max-w-xs">
                             `).join('')}
-                                    </li>
-                                `).join('')}
+                                        </li>
+                                    `).join('')}
                 </ol>
 
 
