@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Ingredient;
 use App\Models\Receipt;
 use App\Models\Step;
 use App\Models\StepImage;
+use App\Models\Tool;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,21 +23,27 @@ class ReceiptController extends Controller
         return view('admin.receipt.index', compact('receipts'));
     }
 
+    public function create(): View
+    {
+        $categories = Category::all();
+        $ingredients = Ingredient::all();
+        $tools = Tool::all();
+        return view('admin.receipt.form', [
+            'categories' => $categories,
+            'ingredients' => $ingredients,
+            'tools' => $tools,
+        ]);
+    }
+
     public function show(Request $request, $id)
     {
         if ($request->ajax()) {
-            $receipt = Receipt::with('categories', 'steps', 'steps.stepImages')->findOrFail($id);
+            $receipt = Receipt::with('categories', 'ingredients', 'equipments', 'steps', 'steps.stepImages')->findOrFail($id);
             Log::info($receipt);
             return Response::json($receipt);
         }
 
         return abort(404);
-    }
-
-    public function create(): View
-    {
-        $categories = Category::all();
-        return view('admin.receipt.form', compact('categories'));
     }
 
     public function store(Request $request)
@@ -55,10 +63,20 @@ class ReceiptController extends Controller
             'steps.*.images.*' => 'nullable|image',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
+            'ingredients' => 'nullable|array',
+            'ingredients.*.id' => 'exists:ingredients,id',
+            'tools' => 'nullable|array',
+            'tools.*.id' => 'exists:tools,id',
         ]);
 
         // Get the selected category IDs
         $categoryIds = $request->input('categories', []);
+
+        // Get the selected ingredients IDs
+        $ingredientIds = $request->input('ingredients', []);
+
+        // Get the selected tools IDs
+        $toolIds = $request->input('tools', []);
 
         // Get the authenticated user's ID
         $userId = Auth::id();
@@ -98,6 +116,18 @@ class ReceiptController extends Controller
         if (isset($validatedData['categories'])) {
             // Attach the categories to the receipt
             $receipt->categories()->sync($categoryIds);
+        }
+
+        // Sync the ingredients
+        if (isset($validatedData['ingredients'])) {
+            // Attach the ingredients to the receipt
+            $receipt->ingredients()->sync($ingredientIds);
+        }
+
+        // Sync the equipments
+        if (isset($validatedData['tools'])) {
+            // Attach the tools to the receipt
+            $receipt->tools()->sync($toolIds);
         }
 
         // Return a response or redirect to a success page
