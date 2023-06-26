@@ -107,7 +107,7 @@
     <div class="container text-center mb-4">
         <div class="grid grid-cols-3  gap-4">
             @forelse ($receipts as $receipt)
-                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mb-4">
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mb-4 ml-5">
                     <a href="#">
                         <img class="flex justify-center rounded-t-lg bg-cover"
                             src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}" alt="" />
