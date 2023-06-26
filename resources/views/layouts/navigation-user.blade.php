@@ -29,7 +29,7 @@
 
             @if (Route::has('login'))
                 @auth
-                    <x-dropdown align="right" width="48">
+                    <x-dropdown-user align="right" width="48">
                         <x-slot name="trigger">
                             <button
                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -49,26 +49,26 @@
                         <x-slot name="content">
                             <!-- If admin, add another dropdown link to go to dashboard -->
                             @if (Auth::user()->role->id == '1')
-                                <x-dropdown-link :href="route('dashboard.dashboard')">
+                                <x-dropdown-link-user :href="route('dashboard.dashboard')">
                                     {{ __('Dashboard') }}
-                                </x-dropdown-link>
+                                </x-dropdown-link-user>
                             @endif
-                            <x-dropdown-link :href="route('profile.edit')">
+                            <x-dropdown-link-user :href="route('profile.edit')">
                                 {{ __('Profile') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link-user>
 
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
 
-                                <x-dropdown-link :href="route('logout')"
+                                <x-dropdown-link-user :href="route('logout')"
                                     onclick="event.preventDefault();
                                                     this.closest('form').submit();">
                                     {{ __('Log Out') }}
-                                </x-dropdown-link>
+                                </x-dropdown-link-user>
                             </form>
                         </x-slot>
-                    </x-dropdown>
+                    </x-dropdown-user>
                 @else
                     <a href="{{ route('login') }}"
                         class="text-center text-gray-700 hover:text-primary transition relative">
