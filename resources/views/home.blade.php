@@ -103,13 +103,13 @@
 
     @forelse ($ingredients as $ingredient)
     <div class="flex flex-wrap">
-        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-4">
-            <a href="#">
+        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-4 mr-5">
+            <a>
                 <img class="rounded-t-lg " src="{{ Storage::disk('ingredients')->url($ingredient->image) }}"
                     alt="" />
             </a>
             <div class="p-5">
-                <a href="#">
+                <a href=>
                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                         {{ $ingredient->name }}
                     </h5>
