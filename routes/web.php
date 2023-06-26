@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 
@@ -67,12 +65,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
         Route::prefix('receipt')->name('receipt.')->group(function () {
             Route::get('/', [ReceiptController::class, 'index'])->name('index');
-            Route::get('/{id}', [ReceiptController::class, 'show'])->name('show');
             Route::get('/create', [ReceiptController::class, 'create'])->name('create');
             Route::post('/create', [ReceiptController::class, 'store'])->name('store');
             Route::get('/update/{id}', [ReceiptController::class, 'edit'])->name('edit');
             Route::put('/update/{id}', [ReceiptController::class, 'update'])->name('update');
             Route::delete('/destroy/{id}', [ReceiptController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}', [ReceiptController::class, 'show'])->name('show');
         });
     });
 });

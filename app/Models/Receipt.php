@@ -26,4 +26,14 @@ class Receipt extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function ingredients(): BelongsToMany
+    {
+        return $this->belongsToMany(Ingredient::class);
+    }
+
+    public function tools(): BelongsToMany
+    {
+        return $this->belongsToMany(Tool::class);
+    }
 }

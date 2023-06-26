@@ -20,57 +20,61 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Name
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Thumbnail
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Description
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Categories
-                                </th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach ($receipts as $receipt)
+                    @if ($receipts->isEmpty())
+                        <p>No receipt founds</p>
+                    @else
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $receipt->title }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <img src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}"
-                                            alt="Thumbnail" class="h-8 w-8">
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $receipt->description }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ implode(', ',$receipt->categories()->pluck('name')->toArray()) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        <button onclick="openReceiptModal('{{ $receipt->id }}')"
-                                            class="text-blue-600 hover:underline focus:outline-none">
-                                            View More
-                                        </button>
-                                    </td>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Name
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Thumbnail
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Description
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Categories
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach ($receipts as $receipt)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ $receipt->title }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <img src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}"
+                                                alt="Thumbnail" class="h-8 w-8">
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ $receipt->description }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ implode(', ',$receipt->categories()->pluck('name')->toArray()) }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <button onclick="openReceiptModal('{{ $receipt->id }}')"
+                                                class="text-blue-600 hover:underline focus:outline-none">
+                                                View More
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
             </div>
         </div>
@@ -100,6 +104,8 @@
     </div>
 
     <script>
+        const receipt = @json($receipt ?? []);
+
         function openReceiptModal(receiptId) {
             const modal = document.getElementById('receiptModal');
             modal.classList.remove('hidden');
@@ -114,7 +120,7 @@
                     receiptContent.innerHTML = `
             <h3 class="text-lg font-semibold mb-2 text-white">${data.title}</h3>
             <div class="flex items-center space-x-4 mb-4">
-                <img src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}" alt="Thumbnail" class="max-w-xs">
+                <img src="{{ isset($receipt['thumbnail_image']) ? Storage::disk('receipts')->url($receipt['thumbnail_image']) : '' }}" alt="Thumbnail" class="max-w-xs">
                 <span class="text-white">${data.description}</span>
             </div>
             <div>
@@ -122,19 +128,33 @@
                 <ul class="mb-4 text-white">
                     ${data.categories.map(category => `<li>- ${category.name}</li>`).join('')}
                 </ul>
+                
+                
             </div>
+            <div>
+                <h4 class="font-semibold mb-2 text-white">Ingredients:</h4>
+                <ul class="mb-4 text-white">
+                    ${data.ingredients.map(ingredient => `<li>- ${ingredient.name}</li>`).join('')}
+                </ul>    
+            </div>
+            <div>
+                <h4 class="font-semibold mb-2 text-white">Tools:</h4>
+                <ul class="mb-4 text-white">
+                    ${data.tools.map(tool => `<li>- ${tool.name}</li>`).join('')}
+                </ul>
+                </div>
             <div>
                 <h4 class="font-semibold mb-2 text-white">Steps:</h4>
                 <ol class="text-white">
                     ${data.steps.map(step => `
-                            <li>
-                                <h3>${step.title}</h3>
-                                <p>${step.description}</p>
-                                ${step.step_images.map(stepImage => `
+                                        <li>
+                                            <h3 class="font-bold">Title : ${step.title}</h3>
+                                            <p>Description : ${step.description}</p>
+                                            ${step.step_images.map(stepImage => `
                                 <img src="{{ Storage::disk('steps')->url('${stepImage.image}') }}" alt="Step Image" class="max-w-xs">
                             `).join('')}
-                            </li>
-                        `).join('')}
+                                        </li>
+                                    `).join('')}
                 </ol>
 
 
