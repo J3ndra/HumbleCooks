@@ -1,12 +1,19 @@
 <x-app-user-layout>
+    @if (session('status'))
+        <x-slot name="header">
+            <div>
+                <p class="text-base text-green-600 font-bold">{{ session('status') }}</p>
+            </div>
+        </x-slot>
+    @endif
     <!-- banner -->
     <div class="bg-cover bg-no-repeat bg-center py-36"
         style="background-image: url('{{ asset('/rumah/images/cook1.jpg') }}');">
         <div class="container">
-            <h1 class="text-6xl text-white font-medium mb-4 capitalize">
+            <h1 class="text-6xl text-white font-medium mb-4 ml-48 capitalize">
                 The place to find the best <br> dining menu
             </h1>
-            <p class="text-white"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
+            <p class="text-white ml-48"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
                 accusantium perspiciatis, sapiente
                 magni eos dolorum ex quos dolores odio</p>
 
@@ -15,34 +22,37 @@
     <!-- ./banner -->
 
     <!-- features -->
-    <div class="container py-16">
-        <div class="w-10/12 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto justify-center">
-            <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
-                <img src="{{ asset('/rumah/images/icons/delivery-van.svg') }}" alt="Delivery"
-                    class="w-12 h-12 object-contain">
-                <div>
-                    <h4 class="font-medium capitalize text-lg">Free Shipping</h4>
-                    <p class="text-gray-500 text-sm">Order over $200</p>
+    <div class="flex justify-center items-center">
+        <div class="container py-16">
+            <div class="w-10/12 grid grid-cols-1 md:grid-cols-3 gap-6 mx-auto justify-center">
+                <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+                    <img src="{{ asset('/rumah/images/icons/delivery-van.svg') }}" alt="Delivery"
+                        class="w-12 h-12 object-contain">
+                    <div>
+                        <h4 class="font-medium capitalize text-lg">Free Shipping</h4>
+                        <p class="text-gray-500 text-sm">Order over $200</p>
+                    </div>
                 </div>
-            </div>
-            <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
-                <img src="{{ asset('/rumah/images/icons/money-back.svg') }}" alt="Delivery"
-                    class="w-12 h-12 object-contain">
-                <div>
-                    <h4 class="font-medium capitalize text-lg">Money Rturns</h4>
-                    <p class="text-gray-500 text-sm">30 days money returs</p>
+                <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+                    <img src="{{ asset('/rumah/images/icons/money-back.svg') }}" alt="Delivery"
+                        class="w-12 h-12 object-contain">
+                    <div>
+                        <h4 class="font-medium capitalize text-lg">Money Returns</h4>
+                        <p class="text-gray-500 text-sm">30 days money returns</p>
+                    </div>
                 </div>
-            </div>
-            <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
-                <img src="{{ asset('/rumah/images/icons/service-hours.svg') }}" alt="Delivery"
-                    class="w-12 h-12 object-contain">
-                <div>
-                    <h4 class="font-medium capitalize text-lg">24/7 Support</h4>
-                    <p class="text-gray-500 text-sm">Customer support</p>
+                <div class="border border-primary rounded-sm px-3 py-6 flex justify-center items-center gap-5">
+                    <img src="{{ asset('/rumah/images/icons/service-hours.svg') }}" alt="Delivery"
+                        class="w-12 h-12 object-contain">
+                    <div>
+                        <h4 class="font-medium capitalize text-lg">24/7 Support</h4>
+                        <p class="text-gray-500 text-sm">Customer support</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- ./features -->
 
     {{-- <!-- categories -->
@@ -87,31 +97,33 @@
 
     <!-- product -->
     @if (isset($search))
-        <div class="container py-16">
-            <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">Hasil Pencarian :</h2>
+        <div class="container ml-48 mb-4">
+            <h2 class="text-2xl font-medium text-gray-800 uppercase">Hasil Pencarian :</h2>
         </div>
     @else
-        <div class="container pb-16">
-            <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">recomended for you</h2>
+        <div class="container ml-48 mb-4">
+            <h2 class="text-2xl font-medium text-gray-800 uppercase">recomended for you</h2>
         </div>
     @endif
     <!-- ./product -->
 
-    <div class="container py-16">
+    <div class="container ml-48 mb-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             @forelse ($receipts as $receipt)
-                <div
-                    class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
                     <a href="#">
-                        <img class="rounded-t-lg" src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}" alt="" />
+                        <img class="rounded-t-lg bg-cover"
+                            src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}" alt="" />
                     </a>
                     <div class="p-5">
                         <a href="#">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $receipt->title }}</h5>
+                            <h5 class="mb-1 text-2xl font-bold tracking-tight text-gray-900">
+                                {{ $receipt->title }}</h5>
                         </a>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $receipt->description }}</p>
+                        <p class="mb-1 font-thin text-gray-700 text-xs">Created by {{ $receipt->user->name }}</p>
+                        <p class="mb-3 font-normal text-gray-700">{{ $receipt->description }}</p>
                         <a href="{{ route('detail', $receipt->id) }}"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
                             Read more
                             <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -130,11 +142,6 @@
 
 
     <!-- copyright -->
-    <div class="bg-gray-800 py-4">
-        <div class="container flex items-center justify-between">
-            <p class="text-white">&copy; Humble's Cook's Corp</p>
-
-        </div>
-    </div>
+    @include('layouts.footer-user-layout')
     <!-- ./copyright -->
 </x-app-user-layout>

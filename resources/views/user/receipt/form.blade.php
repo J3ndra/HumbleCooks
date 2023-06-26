@@ -1,285 +1,306 @@
 <x-app-user-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Receipt') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ isset($receipt) ? __('Edit Receipt') : __('Create Receipt') }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
-                    <form action="{{ route('create_receipt_view') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <form
+                    action="{{ isset($receipt) ? route('store_receipt', $receipt->id) : route('store_receipt') }}"
+                    method="POST" enctype="multipart/form-data" class="p-6">
+                    @csrf
 
-                        <div class="mb-4">
-                            <label for="name" class="block font-medium text-gray-700">Name</label>
-                            <input type="text" name="name" id="name"
-                                class="form-input rounded-md shadow-sm mt-1 block w-full" value="{{ old('name') }}"
-                                required autofocus />
-                            @error('name')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    @method(isset($receipt) ? 'PUT' : 'POST')
 
-                        <div class="mb-4">
-                            <label for="thumbnail" class="block font-medium text-gray-700">Thumbnail</label>
-                            <input type="file" name="thumbnail" id="thumbnail"
-                                class="form-input rounded-md shadow-sm mt-1 block w-full" required />
-                            @error('thumbnail')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
+                    <div class="mb-4">
+                        <label for="name" class="block text-base font-medium text-gray-700">Name</label>
+                        <input type="text" name="name" id="name"
+                            value="{{ isset($receipt) ? $receipt->title : '' }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                    </div>
 
-                            <!-- Preview thumbnail -->
-                            <div id="thumbnail-preview" class="mt-2">
-                                <!-- Placeholder for thumbnail preview -->
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <label for="thumbnail" class="block text-base font-medium text-gray-700">Thumbnail</label>
+                        <input type="file" name="thumbnail" id="thumbnail" onchange="previewThumbnail(event)"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                            {{ isset($receipt) ? '' : 'required' }}>
+                        <img id="thumbnailPreview"
+                            src="{{ isset($receipt) ? Storage::disk('receipts')->url($receipt->thumbnail_image) : '' }}"
+                            alt="Thumbnail Preview" class="mt-2 max-w-xl">
+                    </div>
 
+                    <div class="mb-4">
+                        <label for="description" class="block text-base font-medium text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>{{ isset($receipt) ? $receipt->description : '' }}</textarea>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="description" class="block font-medium text-gray-700">Description</label>
-                            <textarea name="description" id="description" class="form-textarea rounded-md shadow-sm mt-1 block w-full" required>{{ old('description') }}</textarea>
-                            @error('description')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div class="mb-4">
+                        <label for="cal_total" class="block text-base font-medium text-gray-700">Calories</label>
+                        <input type="text" name="cal_total" id="cal_total"
+                            value="{{ isset($receipt) ? $receipt->cal_total : '' }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="cal_total" class="block font-medium text-gray-700">Total Calories</label>
-                            <input type="number" name="cal_total" id="cal_total"
-                                class="form-input rounded-md shadow-sm mt-1 block w-full" value="{{ old('cal_total') }}"
-                                required />
-                            @error('cal_total')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div class="mb-4">
+                        <label for="est_price" class="block text-base font-medium text-gray-700">Estimated Price</label>
+                        <input type="text" name="est_price" id="est_price"
+                            value="{{ isset($receipt) ? $receipt->est_price : '' }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="est_price" class="block font-medium text-gray-700">Estimated Price</label>
-                            <input type="number" name="est_price" id="est_price"
-                                class="form-input rounded-md shadow-sm mt-1 block w-full" value="{{ old('est_price') }}"
-                                required />
-                            @error('est_price')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div class="mb-4">
+                        <label for="categories" class="block text-base font-medium text-gray-700">Categories</label>
+                        <select name="categories[]" id="categories" multiple
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                        <!-- Steps -->
-                        <div class="mb-4">
-                            <label class="block font-medium text-gray-700">Steps</label>
-                            <div id="steps-container">
-                                <div class="mt-2" id="step-0">
-                                    <input type="text" name="steps[0][title]"
-                                        class="form-input rounded-md shadow-sm block w-full mb-2" placeholder="Title"
-                                        required />
-                                    @error('steps.0.title')
-                                        <p class="text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
+                    <div class="mb-4">
+                        <label for="ingredients" class="block text-base font-medium text-gray-700">Ingredients</label>
+                        <select name="ingredients[]" id="ingredients" multiple
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            @foreach ($ingredients as $ingredient)
+                                <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                                    <textarea name="steps[0][description]" class="form-textarea rounded-md shadow-sm block w-full mt-2"
-                                        placeholder="Description" required></textarea>
-                                    @error('steps.0.description')
-                                        <p class="text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
+                    <div class="mb-4">
+                        <label for="tools" class="block text-base font-medium text-gray-700">Tools</label>
+                        <select name="tools[]" id="tools" multiple
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            @foreach ($tools as $tool)
+                                <option value="{{ $tool->id }}">{{ $tool->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                                    <input type="file" name="steps[0][images][]" multiple
-                                        class="form-input rounded-md shadow-sm block w-full mt-2" accept="image/*" />
-                                    @error('steps.0.images.*')
-                                        <p class="text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
+                    <div id="steps-container">
+                        @if (isset($receipt) && $receipt->steps->count() > 0)
+                            @foreach ($receipt->steps as $step)
+                                <div class="mb-4 step">
+                                    <label class="block text-base font-medium text-gray-700">Step
+                                        {{ $loop->iteration }}</label>
+                                    <div class="flex items-center mb-2">
+                                        <input type="text" name="steps[{{ $step->id }}][title]"
+                                            value="{{ $step->title }}"
+                                            class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
+                                            required>
+                                        <button type="button" class="remove-step text-red-500 focus:outline-none">
+                                            Remove
+                                        </button>
+                                    </div>
+                                    <textarea name="steps[{{ $step->id }}][description]" rows="2"
+                                        class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Description">{{ $step->description }}</textarea>
+                                    <div class="mt-2">
+                                        <input type="file" name="steps[{{ $step->id }}][images][]" multiple
+                                            class="image-input" accept="image/*">
+                                    </div>
+                                    <div class="flex mt-2" id="step-images-preview">
+                                        @foreach ($step->stepImages as $image)
+                                            <div class="mr-2">
+                                                <img src="{{ asset('storage/' . $image->image) }}" alt="Step Image"
+                                                    class="w-20 h-20 object-cover rounded-md">
+                                            </div>
+                                        @endforeach
 
-                                    <!-- Preview thumbnail and images -->
-                                    <div id="step-images-preview-0" class="flex mt-2">
-                                        <!-- Preview thumbnail image -->
-                                        <div id="step-thumbnail-preview-0" class="w-20 h-20 mr-2">
-                                            <!-- Placeholder for thumbnail preview -->
-                                        </div>
-
-                                        <!-- Preview images -->
-                                        <div id="step-images-preview-container-0" class="flex">
-                                            <!-- Placeholder for image previews -->
-                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input type="file" name="steps[1][images][]" multiple class="image-input"
+                                            accept="image/*">
                                     </div>
 
-                                    <!-- Add the "Remove Step" button -->
-                                    <button type="button"
-                                        class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 mt-2"
-                                        onclick="removeStep(0)">Remove Step</button>
+                                    <div class="flex mt-2" id="step-images-preview-{{ $loop->iteration }}"></div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="mb-4 step">
+                                <label class="block text-base font-medium text-gray-700">Step
+                                    1</label>
+                                <div class="flex items-center mb-2">
+                                    <input type="text" name="steps[1][title]"
+                                        class="mr-2 w-1/2 rounded-md border-gray-300 shadow-sm" placeholder="Title"
+                                        required>
+                                    <button type="button" class="remove-step text-red-500 focus:outline-none">
+                                        Remove
+                                    </button>
+                                </div>
+                                <textarea name="steps[1][description]" rows="2" class="w-full rounded-md border-gray-300 shadow-sm"
+                                    placeholder="Description"></textarea>
+                                <div class="mt-2">
+                                    <input type="file" name="steps[1][images][]" multiple class="image-input"
+                                        accept="image/*">
+                                </div>
+                                <div class="flex mt-2" id="step-images-preview"></div>
                             </div>
-                            <div class="mt-2">
-                                <button type="button" id="add-step-btn"
-                                    class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-sky-500 hover:bg-sky-700 hover:text-white">
-                                    Add Step
-                                </button>
-                            </div>
-                        </div>
+                        @endif
+                    </div>
 
-                        <!-- Categories -->
-                        <div class="mb-4">
-                            <label for="categories" class="block font-medium text-gray-700">Categories</label>
-                            <select name="categories[]" id="categories" multiple
-                                class="form-multiselect rounded-md shadow-sm mt-1 block w-full">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        @if (in_array($category->id, old('categories', []))) selected @endif>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('categories')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <button type="button" id="add-step"
+                        class="mt-4 inline-flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-white font-medium rounded-md">
+                        Add Step
+                    </button>
 
-                        <!-- Ingredients -->
-                        <div class="mb-4">
-                            <label for="ingredients" class="block font-medium text-gray-700">Ingredients</label>
-                            <select name="ingredients[]" id="ingredients" multiple
-                                class="form-multiselect rounded-md shadow-sm mt-1 block w-full">
-                                @foreach ($ingredients as $ingredient)
-                                    <option value="{{ $ingredient->id }}"
-                                        @if (in_array($ingredient->id, old('ingredients', []))) selected @endif>
-                                        {{ $ingredient->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('ingredients')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
 
-                        <!-- Tools -->
-                        <div class="mb-4">
-                            <label for="tools" class="block font-medium text-gray-700">Tools</label>
-                            <select name="tools[]" id="tools" multiple
-                                class="form-multiselect rounded-md shadow-sm mt-1 block w-full">
-                                @foreach ($tools as $tool)
-                                    <option value="{{ $tool->id }}"
-                                        @if (in_array($tool->id, old('tools', []))) selected @endif>
-                                        {{ $tool->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('tools')
-                                <p class="text-red-500 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="flex items-center justify-end mt-4">
-                            <button type="submit"
-                                class="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-900 bg-green-500 hover:bg-green-700 hover:text-white">
-                                Create Receipt
-                            </button>
-
-                        </div>
-                    </form>
-                </div>
+                    <div>
+                        <button type="submit"
+                            class="mt-4 inline-flex items-center px-4 py-2 bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-white font-medium rounded-md">
+                            {{ isset($receipt) ? 'Update Receipt' : 'Create Receipt' }}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
-        function removeStep(stepIndex) {
-            // Find the step element to remove
-            var stepElement = document.getElementById('step-' + stepIndex);
+        function previewThumbnail(event) {
+            const imageInput = event.target;
+            const thumbnailPreview = document.getElementById('thumbnailPreview');
 
-            // Remove the step element
-            if (stepElement) {
-                stepElement.remove();
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    thumbnailPreview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                thumbnailPreview.src = '';
             }
         }
 
-        document.getElementById('add-step-btn').addEventListener('click', function() {
-            const container = document.getElementById('steps-container');
-            const stepIndex = container.children.length;
+        document.addEventListener('DOMContentLoaded', () => {
+            const stepsContainer = document.getElementById('steps-container');
+            const addStepButton = document.getElementById('add-step');
+            let stepIndex = 1;
 
-            const stepDiv = document.createElement('div');
-            stepDiv.classList.add('mt-2');
-            stepDiv.id = 'step-' + stepIndex;
+            addStepButton.addEventListener('click', () => {
+                const stepDiv = document.createElement('div');
+                stepDiv.classList.add('mb-4', 'step');
 
-            const titleInput = document.createElement('input');
-            titleInput.setAttribute('type', 'text');
-            titleInput.setAttribute('name', `steps[${stepIndex}][title]`);
-            titleInput.classList.add('form-input', 'rounded-md', 'shadow-sm', 'block', 'w-full', 'mb-2');
-            titleInput.setAttribute('placeholder', 'Title');
-            titleInput.required = true;
+                const stepLabel = document.createElement('label');
+                stepLabel.classList.add('block', 'text-base', 'font-medium', 'text-gray-700');
+                stepLabel.textContent = `Step ${stepIndex + 1}`;
+                stepDiv.appendChild(stepLabel);
 
-            const descriptionTextarea = document.createElement('textarea');
-            descriptionTextarea.setAttribute('name', `steps[${stepIndex}][description]`);
-            descriptionTextarea.classList.add('form-textarea', 'rounded-md', 'shadow-sm', 'block', 'w-full',
-                'mb-2');
-            descriptionTextarea.setAttribute('placeholder', 'Description');
-            descriptionTextarea.required = true;
+                const stepFieldsDiv = document.createElement('div');
+                stepFieldsDiv.classList.add('flex', 'items-center', 'mb-2');
+                stepDiv.appendChild(stepFieldsDiv);
 
-            const imagesInput = document.createElement('input');
-            imagesInput.setAttribute('type', 'file');
-            imagesInput.setAttribute('name', `steps[${stepIndex}][images][]`);
-            imagesInput.setAttribute('multiple', 'multiple');
-            imagesInput.classList.add('form-input', 'rounded-md', 'shadow-sm', 'block', 'w-full');
-            imagesInput.setAttribute('accept', 'image/*');
-            imagesInput.addEventListener('change', function(event) {
-                // Remove previous image previews
-                const previewContainer = document.getElementById(
-                    `step-images-preview-container-${stepIndex}`);
-                previewContainer.innerHTML = '';
+                const stepTitleInput = document.createElement('input');
+                stepTitleInput.type = 'text';
+                stepTitleInput.name = `steps[${stepIndex + 1}][title]`;
+                stepTitleInput.classList.add('mr-2', 'w-1/2', 'rounded-md', 'border-gray-300', 'shadow-sm');
+                stepTitleInput.placeholder = 'Title';
+                stepTitleInput.required = true;
+                stepFieldsDiv.appendChild(stepTitleInput);
 
-                const files = event.target.files;
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
+                const removeStepButton = document.createElement('button');
+                removeStepButton.type = 'button';
+                removeStepButton.classList.add('remove-step', 'text-red-500', 'focus:outline-none');
+                removeStepButton.textContent = 'Remove';
+                stepFieldsDiv.appendChild(removeStepButton);
 
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
+                const stepDescriptionTextarea = document.createElement('textarea');
+                stepDescriptionTextarea.name = `steps[${stepIndex + 1}][description]`;
+                stepDescriptionTextarea.rows = '2';
+                stepDescriptionTextarea.classList.add('w-full', 'rounded-md', 'border-gray-300',
+                    'shadow-sm');
+                stepDescriptionTextarea.placeholder = 'Description';
+                stepDiv.appendChild(stepDescriptionTextarea);
+
+                const stepImagesInput = document.createElement('input');
+                stepImagesInput.type = 'file';
+                stepImagesInput.name = `steps[${stepIndex + 1}][images][]`;
+                stepImagesInput.multiple = true;
+                stepImagesInput.classList.add('image-input');
+                stepImagesInput.accept = 'image/*';
+                stepDiv.appendChild(stepImagesInput);
+
+                const stepImagesPreviewDiv = document.createElement('div');
+                stepImagesPreviewDiv.classList.add('flex', 'mt-2');
+                stepImagesPreviewDiv.id = `step-images-preview-${stepIndex + 1}`;
+                stepDiv.appendChild(stepImagesPreviewDiv);
+
+                stepsContainer.appendChild(stepDiv);
+
+                removeStepButton.addEventListener('click', () => {
+                    stepDiv.remove();
+                    stepIndex--;
+                });
+
+
+                const imageInput = stepDiv.querySelector('.image-input');
+                imageInput.addEventListener('change', () => {
+                    const previewDiv = stepDiv.querySelector(
+                        `#step-images-preview-${stepIndex + 1}`);
+                    previewDiv.innerHTML = '';
+
+                    Array.from(imageInput.files).forEach(file => {
                         const imagePreview = document.createElement('img');
-                        imagePreview.setAttribute('src', e.target.result);
-                        imagePreview.setAttribute('alt', file.name);
-                        imagePreview.classList.add('w-20', 'h-20', 'mr-2');
+                        imagePreview.src = URL.createObjectURL(file);
+                        imagePreview.alt = 'Step Image';
+                        imagePreview.classList.add('w-20', 'h-20', 'object-cover',
+                            'rounded-md');
+                        previewDiv.appendChild(imagePreview);
+                    });
+                });
 
-                        previewContainer.appendChild(imagePreview);
-                    };
-
-                    reader.readAsDataURL(file);
-                }
+                stepIndex++;
+                attachImageInputListeners(stepIndex);
             });
 
-            const removeStepButton = document.createElement('button');
-            removeStepButton.setAttribute('type', 'button');
-            removeStepButton.classList.add('px-4', 'py-2', 'border', 'border-transparent', 'text-sm', 'font-medium',
-                'rounded-md', 'text-white', 'bg-red-600', 'hover:bg-red-700', 'mt-2');
-            removeStepButton.textContent = 'Remove Step';
-            removeStepButton.addEventListener('click', function() {
-                removeStep(stepIndex);
-            });
+            function attachImageInputListeners(stepIndex) {
+                const imageInputs = document.querySelectorAll('.image-input');
+                imageInputs.forEach(input => {
+                    input.addEventListener('change', () => {
+                        const stepDiv = input.closest('.step');
+                        const previewDiv = stepDiv.querySelector(
+                            `#step-images-preview-${stepIndex}`);
+                        previewDiv.innerHTML = '';
 
-            stepDiv.appendChild(titleInput);
-            stepDiv.appendChild(descriptionTextarea);
-            stepDiv.appendChild(imagesInput);
-            stepDiv.appendChild(removeStepButton);
-
-            container.appendChild(stepDiv);
-        });
-
-        // Preview thumbnail image
-        document.getElementById('thumbnail').addEventListener('change', function(event) {
-            const thumbnailPreview = document.getElementById('thumbnail-preview');
-            thumbnailPreview.innerHTML = '';
-
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imagePreview = document.createElement('img');
-                    imagePreview.setAttribute('src', e.target.result);
-                    imagePreview.setAttribute('alt', file.name);
-                    imagePreview.classList.add('max-w-xs', 'mr-2');
-
-                    thumbnailPreview.appendChild(imagePreview);
-                };
-
-                reader.readAsDataURL(file);
+                        Array.from(input.files).forEach(file => {
+                            const imagePreview = document.createElement('img');
+                            imagePreview.src = URL.createObjectURL(file);
+                            imagePreview.alt = 'Step Image';
+                            imagePreview.classList.add('w-20', 'h-20', 'object-cover',
+                                'rounded-md');
+                            previewDiv.appendChild(imagePreview);
+                        });
+                    });
+                });
             }
+
+            const imageInputs = document.querySelectorAll('.image-input');
+            imageInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const stepDiv = input.closest('.step');
+                    const previewDiv = stepDiv.querySelector(`#step-images-preview-${stepIndex}`);
+                    previewDiv.innerHTML = '';
+
+                    Array.from(input.files).forEach(file => {
+                        const imagePreview = document.createElement('img');
+                        imagePreview.src = URL.createObjectURL(file);
+                        imagePreview.alt = 'Step Image';
+                        imagePreview.classList.add('w-20', 'h-20', 'object-cover',
+                            'rounded-md');
+                        previewDiv.appendChild(imagePreview);
+                    });
+                });
+            });
+
+            attachImageInputListeners(stepIndex);
         });
     </script>
-
 </x-app-user-layout>

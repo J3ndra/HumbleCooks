@@ -1,7 +1,7 @@
 <!-- header -->
 <header class="py-4 shadow-sm bg-white">
     <div class="container flex items-center justify-between">
-        <a href="{{ route('home') }}">
+        <a href="{{ route('home') }}" class="ml-48">
             <img src="{{ asset('/css/logo.png') }}" alt="Logo" width="300" height="253">
         </a>
         <div class="mb-4 flex justify-end">
@@ -19,7 +19,8 @@
 
 
         <div class="flex items-center space-x-4">
-            <a href="{{ route('create_receipt_view') }}" class="text-center text-gray-700 hover:text-primary transition relative">
+            <a href="{{ route('create_receipt_view') }}"
+                class="text-center text-gray-700 hover:text-primary transition relative">
                 <div class="text-2xl">
                     <i class="fa fa-plus-square-o"></i>
                 </div>
@@ -69,7 +70,8 @@
                         </x-slot>
                     </x-dropdown>
                 @else
-                    <a href="{{ route('login') }}" class="text-center text-gray-700 hover:text-primary transition relative">
+                    <a href="{{ route('login') }}"
+                        class="text-center text-gray-700 hover:text-primary transition relative">
                         <div class="text-2xl">
                             <i class="fas fa-sign-in"></i>
                         </div>
