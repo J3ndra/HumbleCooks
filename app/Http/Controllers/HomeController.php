@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Receipt;
+use App\Models\Tool;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -30,6 +32,10 @@ class HomeController extends Controller
 
     public function create_receipt_view(): View
     {
-        return view('user.receipt.form');
+        $categories = Category::all();
+        $ingredients = Ingredient::all();
+        $tools = Tool::all();
+
+        return view('user.receipt.form', compact('categories', 'ingredients', 'tools'));
     }
 }

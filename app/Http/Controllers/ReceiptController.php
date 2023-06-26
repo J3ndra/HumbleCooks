@@ -154,6 +154,18 @@ class ReceiptController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Get the authenticated user's ID
+        $userId = Auth::id();
+
+        // Get receipt
+        $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
+
+        if ($receipt->user_id !== $userId) {
+            return redirect()
+                ->route('home')
+                ->with('status', 'You are not authorized to edit this receipt.');
+        }
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -167,11 +179,6 @@ class ReceiptController extends Controller
             'steps.*.description' => 'required|string',
             'steps.*.images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
-
-        // Get the authenticated user's ID
-        $userId = Auth::id();
 
         // Update main receipt details
         $receipt->user_id = $userId;

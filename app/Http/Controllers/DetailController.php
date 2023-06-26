@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Category;
-use App\Models\Ingredient;
+
+use App\Models\Receipt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -10,18 +10,18 @@ use Illuminate\Http\Request;
 class DetailController extends Controller
 {
     //
-    public function show($id)
+    public function show($id): View
     {
         // dd("TES");
-        // Ambil data ingredient berdasarkan ID
-        $ingredient = Ingredient::find($id);
+        // Ambil data receipt berdasarkan ID
+        $receipt = Receipt::find($id);
 
-        // Jika ingredient tidak ditemukan, bisa dihandle sesuai kebutuhan
-        if (!$ingredient) {
+        // Jika receipt tidak ditemukan, bisa dihandle sesuai kebutuhan
+        if (!$receipt) {
             return abort(404);
         }
 
-        // Kirim data ingredient ke tampilan detail.blade.php
-        return view('detail', compact('ingredient'));
+        // Kirim data receipt ke tampilan detail.blade.php
+        return view('user.receipt.detail', compact('receipt'));
     }
 }
