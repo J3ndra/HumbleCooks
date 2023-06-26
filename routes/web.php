@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DetailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,8 @@ Route::get('/detail', function () {
 });
 
 Route::get('/search', [IngredientController::class, 'Search'])->name('search');
+Route::get('/detail/{id}', [DetailController::class,'show'])->name('detail');
+
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
