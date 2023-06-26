@@ -97,16 +97,16 @@
 
     <!-- product -->
     @if (isset($search))
-        <div class="container ml-48 mb-4">
+        <div class="container ml-72 mr-72 mb-4">
             <h2 class="text-2xl font-medium text-gray-800 uppercase">Hasil Pencarian :</h2>
         </div>
     @else
-        <div class="container ml-0 mb-4">
+        <div class="container ml-72 mr-72 mb-4">
             <h2 class="text-2xl font-medium text-gray-800 uppercase">recomended for you</h2>
         </div>
     @endif
     <!-- ./product -->
-    <div class="container ml-30 mb-4">
+    <div class="container ml-72 mr-72 mb-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             @forelse ($receipts as $receipt)
                 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
