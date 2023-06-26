@@ -38,7 +38,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- <title>{{ config('app.name', 'Humble Cooks - Admin') }}</title> --}}
-    <title>{{ 'Humble Cooks - Admin' }}</title>
+    <title>{{ 'Humble Cooks' }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
