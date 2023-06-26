@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('My Receipt') }}
             </h2>
-            
+
             @if (session('status'))
                 <p class="text-base text-green-600">{{ session('status') }}</p>
             @endif
@@ -60,12 +60,14 @@
                                             {{ implode(', ',$receipt->categories()->pluck('name')->toArray()) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            <button onclick="openReceiptModal('{{ $receipt->id }}')"
-                                                class="text-blue-600 hover:underline focus:outline-none">
-                                                View More
-                                            </button>
+                                            <a href="{{ route('receipt_detail', $receipt->id) }}">
+                                                <button class="text-blue-600 hover:underline focus:outline-none">
+                                                    View More
+                                                </button>
+                                            </a>
                                             <br>
-                                            <button onclick="window.location.href = '{{ route('dashboard.receipt.edit', $receipt->id) }}'"
+                                            <button
+                                                onclick="window.location.href = '{{ route('dashboard.receipt.edit', $receipt->id) }}'"
                                                 class="text-yellow-600 hover:underline focus:outline-none">
                                                 Edit
                                             </button>
@@ -119,8 +121,8 @@
                 <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-gray-900 font-medium rounded"
                     onclick="hideDeleteConfirmation()">Cancel</button>
                 @isset($receipt)
-                    <form id="deleteForm" method="POST"
-                        action="{{ route('dashboard.receipt.destroy', $receipt->id) }}" class="ml-4">
+                    <form id="deleteForm" method="POST" action="{{ route('dashboard.receipt.destroy', $receipt->id) }}"
+                        class="ml-4">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
@@ -132,74 +134,6 @@
     </div>
 
     <script>
-        const receipt = @json($receipt ?? []);
-
-        function openReceiptModal(receiptId) {
-            const modal = document.getElementById('receiptModal');
-            modal.classList.remove('hidden');
-
-            // Send AJAX request to fetch receipt details
-            $.ajax({
-                url: `{{ route('my_receipt', '') }}/${receiptId}`,
-                type: 'GET',
-                success: function(data) {
-                    const receiptContent = document.getElementById('receiptContent');
-                    // Update the receipt details in the modal
-                    receiptContent.innerHTML = `
-            <h3 class="text-lg font-semibold mb-2 text-gray-900">${data.title}</h3>
-            <div class="flex items-center space-x-4 mb-4">
-                <img src="{{ isset($receipt['thumbnail_image']) ? Storage::disk('receipts')->url($receipt['thumbnail_image']) : '' }}" alt="Thumbnail" class="max-w-xs">
-                <span class="text-gray-900">${data.description}</span>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-2 text-gray-900">Categories:</h4>
-                <ul class="mb-4 text-gray-900">
-                    ${data.categories.map(category => `<li>- ${category.name}</li>`).join('')}
-                </ul>
-                
-                
-            </div>
-            <div>
-                <h4 class="font-semibold mb-2 text-gray-900">Ingredients:</h4>
-                <ul class="mb-4 text-gray-900">
-                    ${data.ingredients.map(ingredient => `<li>- ${ingredient.name}</li>`).join('')}
-                </ul>    
-            </div>
-            <div>
-                <h4 class="font-semibold mb-2 text-gray-900">Tools:</h4>
-                <ul class="mb-4 text-gray-900">
-                    ${data.tools.map(tool => `<li>- ${tool.name}</li>`).join('')}
-                </ul>
-                </div>
-            <div>
-                <h4 class="font-semibold mb-2 text-gray-900">Steps:</h4>
-                <ol class="text-gray-900">
-                    ${data.steps.map(step => `
-                                            <li>
-                                                <h3 class="font-bold">Title : ${step.title}</h3>
-                                                <p>Description : ${step.description}</p>
-                                                ${step.step_images.map(stepImage => `
-                                <img src="{{ Storage::disk('steps')->url('${stepImage.image}') }}" alt="Step Image" class="max-w-xs">
-                            `).join('')}
-                                            </li>
-                                        `).join('')}
-                </ol>
-
-
-            </div>
-        `;
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                }
-            });
-        }
-
-        function closeReceiptModal() {
-            const modal = document.getElementById('receiptModal');
-            modal.classList.add('hidden');
-        }
-
         function showDeleteConfirmation(receiptId) {
             const deleteModal = document.getElementById('deleteModal');
             deleteModal.classList.remove('hidden');

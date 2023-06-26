@@ -50,17 +50,6 @@ class HomeController extends Controller
         return view('user.receipt.index', compact('receipts'));
     }
 
-    public function show(Request $request, $id)
-    {
-        if ($request->ajax()) {
-            $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
-            Log::info($receipt);
-            return Response::json($receipt);
-        }
-
-        return abort(404);
-    }
-
     public function create_receipt_view(): View
     {
         $categories = Category::all();
