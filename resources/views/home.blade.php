@@ -44,7 +44,7 @@
                         class="w-12 h-12 object-contain">
                     <div>
                         <h4 class="font-medium capitalize text-lg">Food Material</h4>
-                        <p class="text-gray-500 text-sm">Tersedia Banyak Bahan di resep makanan</p>
+                        <p class="text-gray-500 text-sm">Tersedia Banyak Bahan makanan untuk dibuat resep makanan</p>
                     </div>
                 </div>
             </div>
@@ -95,21 +95,21 @@
 
     <!-- product -->
     @if (isset($search))
-        <div class="container ml-72 mr-72 mb-4">
+        <div class="container text-center mb-4">
             <h2 class="text-2xl font-medium text-gray-800 uppercase">Hasil Pencarian :</h2>
         </div>
     @else
-        <div class="container ml-72 mr-72 mb-4">
+        <div class="container text-center mb-4">
             <h2 class="text-2xl font-medium text-gray-800 uppercase">recomended for you</h2>
         </div>
     @endif
     <!-- ./product -->
-    <div class="container ml-72 mr-72 mb-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div class="container text-center mb-4">
+        <div class="grid grid-cols-3  gap-4">
             @forelse ($receipts as $receipt)
-                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow">
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mb-4">
                     <a href="#">
-                        <img class="rounded-t-lg bg-cover"
+                        <img class="flex justify-center rounded-t-lg bg-cover"
                             src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}" alt="" />
                     </a>
                     <div class="p-5">
@@ -118,10 +118,10 @@
                                 {{ $receipt->title }}</h5>
                         </a>
                         <p class="mb-1 font-thin text-gray-700 text-xs">Created by {{ $receipt->user->name }}</p>
-                        <p class="mb-3 font-normal text-gray-700">{{ $receipt->description }}</p>
+                        <p class="mb-3 font-normal text-gray-700">{{  Illuminate\Support\Str::limit($receipt->description,12) }}</p>
                         <a href="{{ route('detail', $receipt->id) }}"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                            Read more
+                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-400 rounded-lg hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                            Lihat Resep
                             <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"

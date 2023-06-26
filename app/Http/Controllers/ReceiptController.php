@@ -19,7 +19,7 @@ class ReceiptController extends Controller
 {
     public function index(): View
     {
-        $receipts = Receipt::all();
+        $receipts = Receipt::limit(10)->get();
 
         return view('admin.receipt.index', compact('receipts'));
     }
