@@ -2,23 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Receipt;
 use App\Models\Step;
 use App\Models\StepImage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 
 class ReceiptController extends Controller
 {
     public function index(): View
     {
-        return view('admin.receipt.index');
+        $receipts = Receipt::all();
+
+        return view('admin.receipt.index', compact('receipts'));
+    }
+
+    public function show(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $receipt = Receipt::with('categories', 'steps', 'steps.stepImages')->findOrFail($id);
+            Log::info($receipt);
+            return Response::json($receipt);
+        }
+
+        return abort(404);
     }
 
     public function create(): View
     {
-        return view('admin.receipt.form');
+        $categories = Category::all();
+        return view('admin.receipt.form', compact('categories'));
     }
 
     public function store(Request $request)
@@ -36,13 +53,18 @@ class ReceiptController extends Controller
             'steps.*.description' => 'required',
             'steps.*.images' => 'nullable|array',
             'steps.*.images.*' => 'nullable|image',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
         ]);
+
+        // Get the selected category IDs
+        $categoryIds = $request->input('categories', []);
 
         // Get the authenticated user's ID
         $userId = Auth::id();
 
         // Store the thumbnail image
-        $thumbnailPath = $request->file('thumbnail')->store('receipts', 'receipts');
+        $thumbnailPath = $request->file('thumbnail')->store('receipts', 'public');
 
         // Process the form data and store the receipt
         $receipt = new Receipt();
@@ -63,13 +85,19 @@ class ReceiptController extends Controller
 
             if (isset($stepData['images'])) {
                 foreach ($stepData['images'] as $image) {
-                    $imagePath = $image->store('steps', 'steps');
+                    $imagePath = $image->store('steps', 'public');
 
                     $stepImage = new StepImage();
                     $stepImage->image = $imagePath;
                     $step->stepImages()->save($stepImage);
                 }
             }
+        }
+
+        // Sync the categories
+        if (isset($validatedData['categories'])) {
+            // Attach the categories to the receipt
+            $receipt->categories()->sync($categoryIds);
         }
 
         // Return a response or redirect to a success page

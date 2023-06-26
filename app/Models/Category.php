@@ -16,4 +16,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Ingredient::class);
     }
+
+    public function receipts(): BelongsToMany
+    {
+        return $this->belongsToMany(Receipt::class);
+    }
 }

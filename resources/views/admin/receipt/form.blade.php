@@ -65,6 +65,17 @@
                             required>
                     </div>
 
+                    <div class="mb-4">
+                        <label for="categories" class="block text-base font-medium text-gray-700 dark:text-gray-300">Categories</label>
+                        <select name="categories[]" id="categories" multiple
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:border-gray-600 dark:focus:border-indigo-500 dark:focus:ring-indigo-500 dark:text-white">
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+
                     <div id="steps-container">
                         @if (isset($receipt) && $receipt->steps->count() > 0)
                             @foreach ($receipt->steps as $step)
