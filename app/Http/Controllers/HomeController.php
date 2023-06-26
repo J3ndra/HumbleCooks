@@ -12,6 +12,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 
 class HomeController extends Controller
 {
@@ -32,6 +34,24 @@ class HomeController extends Controller
         return view('home', [
             'receipts' => $receipts
         ]);
+    }
+
+    public function my_receipt(): View
+    {
+        $receipts = Receipt::where('user_id', Auth::id())->paginate(5);
+
+        return view('user.receipt.index', compact('receipts'));
+    }
+
+    public function show(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $receipt = Receipt::with('categories', 'ingredients', 'tools', 'steps', 'steps.stepImages')->findOrFail($id);
+            Log::info($receipt);
+            return Response::json($receipt);
+        }
+
+        return abort(404);
     }
 
     public function create_receipt_view(): View

@@ -99,6 +99,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/create-receipt', [HomeController::class, 'create_receipt_view'])->name('create_receipt_view');
     Route::post('/create-receipt', [HomeController::class, 'store_receipt'])->name('store_receipt');
     Route::get('/receipt/${id}', [HomeController::class, 'receipt_detail'])->name('receipt_detail');
+    Route::get('/my-receipt', [HomeController::class, 'my_receipt'])->name('my_receipt');
+    Route::get('/my-receipt/{id}', [HomeController::class, 'show'])->name('show');
 });
 
 Route::middleware('auth')->group(function () {

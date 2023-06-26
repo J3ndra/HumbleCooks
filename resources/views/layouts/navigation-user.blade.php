@@ -53,6 +53,11 @@
                                     {{ __('Dashboard') }}
                                 </x-dropdown-link-user>
                             @endif
+                            @if (Auth::user()->role->id == '2')
+                                <x-dropdown-link-user :href="route('my_receipt')">
+                                    {{ __('My Receipt') }}
+                                </x-dropdown-link-user>
+                            @endif
                             <x-dropdown-link-user :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-dropdown-link-user>
