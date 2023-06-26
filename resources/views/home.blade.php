@@ -13,9 +13,7 @@
             <h1 class="text-6xl text-white font-medium mb-4 ml-72 capitalize">
                 The place to find the best <br> dining menu
             </h1>
-            <p class="text-white ml-72"">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam <br>
-                accusantium perspiciatis, sapiente
-                magni eos dolorum ex quos dolores odio</p>
+            <p class="text-white ml-72"">Anyone Can Cook , Someone Can Cook , Everybody Can Cook , Let Him Cook</p>
 
         </div>
     </div>
