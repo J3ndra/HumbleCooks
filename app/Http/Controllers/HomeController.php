@@ -20,8 +20,6 @@ class HomeController extends Controller
 {
     public function index(Request $request): View
     {
-        // $item = $request->search;
-        // $ingr = Ingredient::where('name','LIKE',"%$item%")->get();
         $search = $request->input('search');
 
         $query = Receipt::query();
@@ -33,9 +31,24 @@ class HomeController extends Controller
         $receipts = $query->paginate(5);
 
         return view('home', [
-            'receipts' => $receipts
+            'receipts' => $receipts,
+            'search' => $search, // Pass the $search variable to the view
         ]);
     }
+
+    public function receipt_category($id): View
+    {
+        // FInd category name
+        $categoryName = Category::findOrFail($id)->name;
+
+        // Find receipts with category $id using Eloquent query builder
+        $receipts = Receipt::whereHas('categories', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->get();
+
+        return view('home', compact('receipts', 'categoryName'));
+    }
+
 
     public function receipt_detail($id): View
     {

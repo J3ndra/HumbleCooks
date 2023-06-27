@@ -7,17 +7,19 @@
             <div class="m-8">
                 <div class="mb-2">
                     @foreach ($receipt->categories as $category)
-                        <div class="border border-gray-200 rounded-lg pr-4 pl-4 pt-2 pb-2 inline-block">
-                            <p>{{ $category->name }}</p>
-                        </div>
+                        <a href="{{ route('receipt_category', $category->id) }}">
+                            <div class="border border-gray-200 rounded-lg pr-4 pl-4 pt-2 pb-2 inline-block hover:bg-orange-500 hover:text-white">
+                                <p>{{ $category->name }}</p>
+                            </div>
+                        </a>
                     @endforeach
                 </div>
 
                 <p class="text-3xl font-bold mb-2">{{ $receipt->title }}</p>
                 <p class="text-xs font-light mb-4">Created by {{ $receipt->user->name }}</p>
                 <p class="text-base font-light mb-2">{{ $receipt->description }}</p>
-                <p class="text-base font-light mb-2">Calories : {{ $receipt->cal_total }}</p>
-                <p class="text-base font-light mb-4">Estimated Cost: Rp
+                <p class="text-xl font-semibold mb-2">Calories : {{ $receipt->cal_total }}</p>
+                <p class="text-xl font-semibold mb-4">Estimated Cost: Rp
                     {{ number_format($receipt->est_price, 2, ',', '.') }}</p>
                 <p class="text-base font-bold mb-2">Bahan-bahan</p>
                 <div class="mb-2">
@@ -42,12 +44,13 @@
                         <p class="text-sm font-thin mb-2">{{ $step->description }}</p>
                         <div class="flex mb-2">
                             @foreach ($step->stepImages as $stepImage)
-                                <img class="mr-2 max-w-xs" src="{{ Storage::disk('steps')->url($stepImage->image) }}" alt="step-image">
+                                <img class="mr-2 max-w-xs" src="{{ Storage::disk('steps')->url($stepImage->image) }}"
+                                    alt="step-image">
                             @endforeach
                         </div>
                     @endforeach
                 </div>
-                
+
 
             </div>
         </div>
