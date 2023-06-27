@@ -8,7 +8,8 @@
                 <div class="mb-2">
                     @foreach ($receipt->categories as $category)
                         <a href="{{ route('receipt_category', $category->id) }}">
-                            <div class="border border-gray-200 rounded-lg pr-4 pl-4 pt-2 pb-2 inline-block hover:bg-orange-500 hover:text-white">
+                            <div
+                                class="border border-gray-200 rounded-lg pr-4 pl-4 pt-2 pb-2 inline-block hover:bg-orange-500 hover:text-white">
                                 <p>{{ $category->name }}</p>
                             </div>
                         </a>
@@ -18,7 +19,7 @@
                 <p class="text-3xl font-bold mb-2">{{ $receipt->title }}</p>
                 <p class="text-xs font-light mb-4">Created by {{ $receipt->user->name }}</p>
                 <p class="text-base font-light mb-2">{{ $receipt->description }}</p>
-                <p class="text-xl font-semibold mb-2">Calories : {{ $receipt->cal_total }}</p>
+                <p class="text-xl font-semibold mb-2">Calories: {{ number_format($receipt->cal_total, 0) }}</p>
                 <p class="text-xl font-semibold mb-4">Estimated Cost: Rp
                     {{ number_format($receipt->est_price, 2, ',', '.') }}</p>
                 <p class="text-base font-bold mb-2">Bahan-bahan</p>
