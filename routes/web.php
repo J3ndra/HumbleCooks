@@ -28,7 +28,7 @@ Route::get('/detail', function () {
 });
 
 Route::get('/search', [IngredientController::class, 'Search'])->name('search');
-Route::get('/detail/{id}', [DetailController::class, 'show'])->name('detail');
+Route::get('/detail/{id}', [HomeController::class, 'receipt_detail'])->name('receipt_detail');
 
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::prefix('dashboard')
@@ -98,11 +98,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/create-receipt', [HomeController::class, 'create_receipt_view'])->name('create_receipt_view');
     Route::post('/create-receipt', [HomeController::class, 'store_receipt'])->name('store_receipt');
-    Route::get('/receipt/{id}', [HomeController::class, 'receipt_detail'])->name('receipt_detail');
+    // Route::get('/receipt/{id}', [HomeController::class, 'receipt_detail'])->name('receipt_detail');
     Route::get('/edit-receipt/{id}', [HomeController::class, 'edit_receipt'])->name('edit_receipt');
     Route::put('/edit-receipt/{id}', [HomeController::class, 'update_receipt'])->name('update_receipt');
     Route::get('/my-receipt', [HomeController::class, 'my_receipt'])->name('my_receipt');
     Route::delete('/receipt/{id}', [HomeController::class, 'delete_receipt'])->name('delete_receipt');
+    Route::get('/receipt-category/{id}', [HomeController::class, 'receipt_category'])->name('receipt_category');
 });
 
 Route::middleware('auth')->group(function () {
