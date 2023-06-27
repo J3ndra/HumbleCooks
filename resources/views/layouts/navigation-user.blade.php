@@ -2,7 +2,7 @@
 <header class="py-4 shadow-sm bg-white">
     <div class="container flex items-center justify-between">
         <a href="{{ route('home') }}" class="ml-30">
-            <img src="{{ asset('/css/logo.png') }}" alt="Logo" width="300" height="253">
+            <img src="{{ asset('/css/logo.png') }}" alt="Logo" class="logo-img">
         </a>
         <div class="mb-4 flex justify-end">
             <form action="{{ route('home') }}" method="GET" class="flex">
