@@ -77,6 +77,13 @@
             max-width: 40%;
             height: auto;
         }
+
+        .description-cell {
+            max-width: 200px;
+            /* Adjust the value to your desired maximum width */
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 

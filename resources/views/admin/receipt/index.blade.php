@@ -58,7 +58,7 @@
                                             <img src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}"
                                                 alt="Thumbnail" class="max-w-xs">
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white description-cell">
                                             {{ $receipt->description }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">

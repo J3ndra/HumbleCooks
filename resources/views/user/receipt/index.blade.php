@@ -53,8 +53,8 @@
                                             <img src="{{ Storage::disk('receipts')->url($receipt->thumbnail_image) }}"
                                                 alt="Thumbnail" class="max-w-xs">
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $receipt->description }}
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 description-cell">
+                                            <p class="truncate">{{ $receipt->description }}</p>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ implode(', ',$receipt->categories()->pluck('name')->toArray()) }}
