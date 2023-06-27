@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
-            IngredientSeeder::class,
+            // IngredientSeeder::class,
         ]);
     }
 }
